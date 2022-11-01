@@ -46,11 +46,27 @@ jobs:
       - name: Linux Before install
         run: |
           sudo ./ci/${{ matrix.job_name }}_runner.sh before_install
+
+          # TODO: use a fix release once they have created one.
+          # See https://github.com/Tongsuo-Project/Tongsuo/issues/318
+          git clone https://github.com/api7/tongsuo --depth 1
+          cd tongsuo
+          ./config shared -enable-ntls -g --prefix=/usr/local/tongsuo
+          make -j2
+          sudo make install_sw
         working-directory: workbench
 
       - name: Linux Do install
         run: |
+          export OR_PREFIX=/usr/local/openresty-debug
+          export openssl_prefix=/usr/local/tongsuo
+          export zlib_prefix=$OR_PREFIX/zlib
+          export pcre_prefix=$OR_PREFIX/pcre
+
+          export cc_opt="-DNGX_LUA_ABORT_AT_PANIC -I${zlib_prefix}/include -I${pcre_prefix}/include -I${openssl_prefix}/include"
+          export ld_opt="-L${zlib_prefix}/lib -L${pcre_prefix}/lib -L${openssl_prefix}/lib64 -Wl,-rpath,${zlib_prefix}/lib:${pcre_prefix}/lib:${openssl_prefix}/lib64"
           sudo ./ci/${{ matrix.job_name }}_runner.sh do_install
+          openresty -V
         working-directory: workbench
 
       - name: Run test case
