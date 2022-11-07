@@ -54,11 +54,15 @@ install_module() {
 run_case() {
     export_or_prefix
 
+    openresty -V
+
     ./bin/apisix init
     ./bin/apisix init_etcd
 
+    export PATH=/usr/local/tongsuo/bin:$PATH
+    openssl version
     git submodule update --init --recursive
-    FLUSH_ETCD=1 prove -I../test-nginx/lib -I./ -r t/gm
+    FLUSH_ETCD=1 prove -I../test-nginx/lib -I./ -r t/gm || cat t/servroot/logs/error.log
 }
 
 # =======================================
