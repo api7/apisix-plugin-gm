@@ -99,7 +99,6 @@ passed
 
 
 === TEST 2: hit
---- LAST
 --- exec
 openssl s_client -connect localhost:1994 -servername localhost -cipher ECDHE-SM2-WITH-SM4-SM3 -enable_ntls -ntls -verifyCAfile t/certs/gm_ca.crt -sign_cert t/certs/client_sign.crt -sign_key t/certs/client_sign.key -enc_cert t/certs/client_enc.crt -enc_key t/certs/client_enc.key
 --- response_body eval

@@ -62,7 +62,7 @@ run_case() {
     export PATH=/usr/local/tongsuo/bin:$PATH
     openssl version
     git submodule update --init --recursive
-    FLUSH_ETCD=1 prove -I../test-nginx/lib -I./ -r t/gm || cat t/servroot/logs/error.log
+    FLUSH_ETCD=1 prove -I../test-nginx/lib -I./ -r t/gm
 }
 
 # =======================================
